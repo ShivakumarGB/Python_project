@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                    pip install build pytest
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pytest
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    python -m build
+                '''
+            }
+        }
+    }
+}
